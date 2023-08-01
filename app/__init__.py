@@ -34,7 +34,7 @@ app.register_blueprint(user_routes, url_prefix='/api/users')
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(pin_routes, url_prefix='/api/pins')
 app.register_blueprint(comment_routes, url_prefix='/api/comments')
-app.register_blueprint(pin_create_route, url_prefix='/api/pin-builder')
+
 
 db.init_app(app)
 Migrate(app, db)

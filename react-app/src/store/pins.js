@@ -2,6 +2,8 @@
 export const LOAD_ALL_PINS = "pins/LOAD_ALL_PINS";
 export const LOAD_ONE_PIN = "pins/LOAD_ONE_PIN";
 export const ADD_PIN = 'pins/ADD_PIN';
+export const UPDATE_PIN = "pin/update"
+export const DELETE_PIN = "pin/delete";
 
 /**  Action Creators: */
 export const loadAllPinsAction = (pins) => ({
@@ -20,6 +22,8 @@ export const addPin = (pin) => {
       payload: pin,
   }
 }
+
+
 
 /** Thunk Action Creators: */
 export const fetchAllPinsThunk = () => async (dispatch) => {
@@ -62,6 +66,32 @@ export const createNewPinThunk = (pin) => async (dispatch) => {
     console.log("There was an error making your pin!")
   }
 
+}
+
+export const updatePinThunk =
+(updatePin, id) => async (dispatch) => {
+  try {
+    const response = await fetch(`/api/pins/${id}`, {
+      headers: { "Content-Type": "application/json" },
+      method: "UPDATE",
+      body: JSON.stringify(updatePin),
+      // body: JSON.stringify({
+      //   title: updatePin.title,
+      //   description: updatePin.description,
+      //   link: updatePin.link,
+      //   alt_text: updatePin.altText,
+      //   note_to_self:updatePin.note,
+      //   allow_comment:updatePin.allow_comment
+      // }),
+    })
+    let updatedPin = await response.json();
+    console.log('updated Pin', updatedPin)
+    dispatch(loadOnePinAction(updatedPin));  //now
+    return updatedPin;
+
+  } catch (error) {
+    console.log('error', error)
+  }
 }
 
 /** Pins Reducer: */

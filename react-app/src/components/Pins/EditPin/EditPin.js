@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-
+import {updatePinThunk} from "../../../store/pins";
 import './EditPin.css';
 
 
@@ -21,35 +21,56 @@ function EditPin({ pin }) {
     setAltText(targetPin.altText)
     setNote(targetPin.note)
     setAllow_comment(targetPin.allow_comment)  //default true
-    setShow_shopping_recommendations(targetPin.show_shopping_recommendations)  //default true
-    console.log('after first render',targetPin.allow_comment)
+    // setShow_shopping_recommendations(targetPin.show_shopping_recommendations)  //default true
+    console.log('after first render', targetPin.allow_comment)
   }, [targetPin])
+
+
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
   const [altText, setAltText] = useState('');
   const [note, setNote] = useState('');
-  const [allow_comment, setAllow_comment] = useState('');
-  const [show_shopping_recommendations, setShow_shopping_recommendations] = useState('');
+  const [allow_comment, setAllow_comment] = useState(null);
+  // const [show_shopping_recommendations, setShow_shopping_recommendations] = useState('');
 
 
 
   const handleSubmit = async (e) => {
-    // pending
+    e.preventDefault();
+    let payload = {
+      ...pin,
+      title,
+      description,
+      link,
+      altText,
+      note,
+      allow_comment
+    }
+    console.log("updatedPin:", payload);
+    const updatedPin = await dispatch(updatePinThunk(payload,targetPin.id));
+    // history.push(`/pins/${targetPin.id}`)
+    history.push(`/pins`)
   }
   const handleCancel = async (e) => {
     history.goBack()
   }
 
   const handleCommentToggleChange = async (e) => {
-    // setCommentPermission(e.target.checked)
-    setAllow_comment(!allow_comment)
+
+    setAllow_comment((allow_comment) => !allow_comment);
+    console.log('in handleCommentToggleChange',allow_comment)
+    // Remember above may not show the updated value because it's happening synchronously right after the state update is scheduled, but the log in the useEffect hook on line 60 will show the correct value after the component re-renders.
+
   }
-  const handleRecommendToggleChange = async (e) => {
-    setShow_shopping_recommendations(e.target.checked)
-    // console.log('recommend', show_shopping_recommendations)
-  }
+  // const handleRecommendToggleChange = async (e) => {
+  //   setShow_shopping_recommendations(e.target.checked)
+  // }
+
+  useEffect(() => {
+    console.log('in the useeffect', allow_comment);
+  }, [allow_comment]);
 
   return (
     <>
@@ -110,29 +131,31 @@ function EditPin({ pin }) {
               </label>
             </div>
 
-            { allow_comment ?(
+            {allow_comment ? (
               <div className='comment-toggle'>
-              <input type="checkbox"
-                id="switch"
-                class="checkbox"
-                checked={allow_comment}
-                onChange={handleCommentToggleChange} />
-              <label for="switch"
-                class="toggle">
-              </label>
-              Allow people to comment
-            </div>):(
+                <input type="checkbox"
+                  id="switch"
+                  class="checkbox"
+                  checked={allow_comment}
+                  onChange={handleCommentToggleChange}
+                  />
+                <label for="switch"
+                  class="toggle">
+                </label>
+                Allow people to comment
+              </div>) : (
               <div className='comment-toggle'>
-              <input type="checkbox"
-                id="switch"
-                class="checkbox"
-                checked={allow_comment}
-                onChange={handleCommentToggleChange} />
-              <label for="switch"
-                class="toggle">
-              </label>
-              Allow people to comment
-            </div>)
+                <input type="checkbox"
+                  id="switch"
+                  class="checkbox"
+                  checked={allow_comment}
+                  onChange={handleCommentToggleChange}
+                  />
+                <label for="switch"
+                  class="toggle">
+                </label>
+                Allow people to comment
+              </div>)
 
             }
 

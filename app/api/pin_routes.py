@@ -1,9 +1,14 @@
-from flask import Blueprint, jsonify, request
-from flask_login import login_required, current_user
-from app.models import Pin, Comment, db
 from datetime import datetime
+from random import randint
+from flask import Blueprint, jsonify, request, redirect, url_for
+from flask_login import login_required, current_user
+from .AWS_helpers import upload_file_to_s3, get_unique_filename
+from .auth_routes import validation_errors_to_error_messages
+
+from app.models import db, Pin, Comment, User
 from app.forms.comment_form import CommentForm
 from app.forms.edit_comment_form import EditCommentForm
+from ..forms.pin_post_forms import PinForm
 
 pin_routes = Blueprint('pins', __name__)
 
@@ -37,6 +42,35 @@ def get_one_pin(pinId):
     #     comments_list, key=lambda x: x["updated_at"], reverse=True)
     return response
 
+@pin_routes.route('', methods=["POST"])
+@login_required
+def new_pin():
+    form = PinForm()
+    form['csrf_token'].data = request.cookies['csrf_token']
+    # count = Pin.query.all().count
+    print('Bckend now!!!!!!!', current_user)
+
+    if form.validate_on_submit():
+
+        image_file = form.data["image"]
+        image_file.filename = get_unique_filename(image_file.filename)
+        upload = upload_file_to_s3(image_file)
+
+        new_pin = Pin(
+            owner_id=current_user.to_dict()['id'],
+            image_url=upload["url"],
+            title=form.data['title'],
+            description=form.data['description'],
+            alt_text=form.data['alt_text'],
+            link=form.data['link']
+        )
+        print('new pin@@@@@@@@@@@@@@@@@@@@', new_pin.to_dict())
+        db.session.add(new_pin)
+        db.session.commit()
+        # return {"new Pin": new_pin.to_dict()}
+
+    print(form.errors)
+    return {"errors": validation_errors_to_error_messages(form.errors)}
 
 @pin_routes.route('/<int:pinId>/comments')
 def get_pin_comments_by_pinId(pinId):
@@ -48,6 +82,7 @@ def get_pin_comments_by_pinId(pinId):
             "photo_url": comment.user.photo_url, "first_name": comment.user.first_name}
         comments_list.append(comment_dict)
     return comments_list
+
 
 
 @pin_routes.route('/<int:pinId>/comments', methods=['POST'])
@@ -72,22 +107,23 @@ def add_comment_to_pin(pinId):
         return form.errors
 
 # Update pin
-@pin_routes.route('/pin/<int:pinId>', methods=['POST'])
+@pin_routes.route('/<int:pinId>', methods=['PUT'])
 @login_required
 def edit_pin(pinId):
     form = EditCommentForm()
-    print("in update route", form.data)
     form['csrf_token'].data = request.cookies['csrf_token']
+
+    print("in update route", form.data)
     target_pin = Pin.query.get(id)
+
     if form.validate_on_submit():
-        print("we pass validation")
         target_pin.title = form.data['title']
         target_pin.description = form.data['description']
         target_pin.alt_text = form.data['alt_text']
         target_pin.link = form.data['link']
         target_pin.note_to_self = form.data['note_to_self']
         target_pin.allow_comment = form.data['allow_comment']
-        target_pin.show_shopping_recommendations = form.data['show_shopping_recommendations']
+        # target_pin.show_shopping_recommendations = form.data['show_shopping_recommendations']
 
         db.session.commit()
         response = target_pin.to_dict()
