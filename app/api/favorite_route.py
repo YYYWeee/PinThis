@@ -15,3 +15,21 @@ def unfavorite_pin(pinId, boardId):
         return {"Response": "Successfully unfavorited this pin"}
     else:
         return {"Response": "Could not unfavorite this pin"}
+
+
+@favorite_routes.route('/<int:boardId>/<int:pinId>', methods=['POST'])
+@login_required
+def favorite_pin(boardId, pinId):
+    pin = Pin.query.get(pinId)
+    if not pin:
+        return ({"errors": "Pin not found"})
+
+    favorite = Favorite.query.filter_by(board_id=boardId, pin_id=pinId).first()
+    if favorite:
+        return ({"errors": "Pin is already favorited on this board"})
+
+    new_favorite = Favorite(board_id=boardId, pin_id=pinId, user_id=current_user.id)
+    db.session.add(new_favorite)
+    db.session.commit()
+
+    return ({"message": "Pin favorited successfully"})

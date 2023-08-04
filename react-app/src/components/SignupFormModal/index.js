@@ -40,7 +40,7 @@ function SignupFormModal() {
     if (username.length < 4)
       errorsObj.username = "Username must be at least 4 characters";
     if (password.length < 6)
-      errorsObj.password = "Password must be at least 6 characters";
+      errorsObj.passLength = "Password must be at least 6 characters";
 
     setFormErr(errorsObj);
   }, [username, email, firstName, lastName, password]);
@@ -49,41 +49,37 @@ function SignupFormModal() {
     e.preventDefault();
     setDidSubmit(true);
 
-    if (password === confirmPassword) {
-      setFormErr({});
-      const data = await dispatch(
-        signUp({
-          email: email.toLowerCase(),
-          username,
-          first_name: firstName,
-          last_name: lastName,
-          password,
-        })
-      );
-      if (data) {
-        const flattenedData = {};
-        data.forEach((item) => {
-          const [key, value] = item.split(" : ");
-          flattenedData[key.trim()] = value.trim();
-        });
-        setFormErr(flattenedData);
+    if (Object.keys(formErr).length === 0) {
+      if (password === confirmPassword) {
+        setFormErr({});
+        const data = await dispatch(
+          signUp({
+            email: email.toLowerCase(),
+            username,
+            first_name: firstName,
+            last_name: lastName,
+            password,
+          })
+        );
+        if (data) {
+          const flattenedData = {};
+          data.forEach((item) => {
+            const [key, value] = item.split(" : ");
+            flattenedData[key.trim()] = value.trim();
+          });
+          setFormErr(flattenedData);
+        } else {
+          closeModal();
+          history.push("/pins");
+        }
       } else {
-        closeModal();
-        history.push("/pins");
+        const errorsObj = {
+          confirmPassword: "Confirm Password and Password must be the same",
+        };
+        setFormErr(errorsObj);
       }
-    } else {
-      const errorsObj = {
-        confirmPassword: "Confirm Password and Password must be the same",
-      };
-
-      setFormErr(errorsObj);
-
-      // setErrors([
-      //   "Confirm Password field must be the same as the Password field",
-      // ]);
     }
   };
-  const disabled = password.length < 6 ? true : null;
 
   return (
     <div className="sign-wrap">
@@ -168,6 +164,9 @@ function SignupFormModal() {
         {didSubmit && formErr.password && (
           <p className="sign-err">{formErr.password}</p>
         )}
+        {didSubmit && formErr.passLength && (
+          <p className="sign-err">{formErr.passLength}</p>
+        )}
         {didSubmit && formErr.confirmPassword && (
           <p className="sign-err">{formErr.confirmPassword}</p>
         )}
@@ -188,7 +187,7 @@ function SignupFormModal() {
             )}
           </div>
         </label>
-        <button className="continue-btn" disabled={disabled} type="submit">
+        <button className="continue-btn" type="submit">
           Continue
         </button>
         <div className="on-pinthis">

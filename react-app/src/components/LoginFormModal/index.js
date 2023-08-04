@@ -29,8 +29,11 @@ function LoginFormModal() {
     if (!emailRegex.test(email)) {
       errorsObj.logEmail = "Please enter a valid email address";
     }
+
+    if (password.length < 6)
+      errorsObj.passlength = "Password must be at least 6 characters";
     setFormErr(errorsObj);
-  }, [email]);
+  }, [email, password]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,8 +70,6 @@ function LoginFormModal() {
     closeModal();
     history.push("/pins");
   };
-
-  const disabled = password.length < 6 ? true : null;
 
   return (
     <div className="log-wrap">
@@ -123,7 +124,10 @@ function LoginFormModal() {
         {didSubmit && formErr.password && (
           <p className="sign-err">{formErr.password}</p>
         )}
-        <button className="continue-btn" type="submit" disabled={disabled}>
+        {didSubmit && formErr.passlength && (
+          <p className="sign-err">{formErr.passlength}</p>
+        )}
+        <button className="continue-btn" type="submit">
           Log In
         </button>
         <button className="demo-btn" onClick={demoUser}>

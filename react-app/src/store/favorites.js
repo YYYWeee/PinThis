@@ -3,6 +3,8 @@ export const LOAD_FAVORITES = "favorites/LOAD_FAVORITES";
 
 export const DELETE_FAVORITE = "favorites/DELETE_FAVORITE";
 
+export const ADD_FAVORITE = "favorites/ADD_FAVORITE";
+
 /**  Action Creators: */
 const loadFavorites = (favorites) => ({
   type: LOAD_FAVORITES,
@@ -12,6 +14,11 @@ const loadFavorites = (favorites) => ({
 const deleteFavorite = (pinId) => ({
   type: DELETE_FAVORITE,
   pinId,
+});
+
+const addFavorite = (favorite) => ({
+  type: ADD_FAVORITE,
+  favorite,
 });
 
 /** Thunk Action Creators: */
@@ -45,6 +52,30 @@ export const fetchDeleteFavThunk = (boardId, pinId) => async (dispatch) => {
   }
 };
 
+export const fetchAddFavoriteThunk =
+  (boardId, pinId, favorite) => async (dispatch) => {
+    try {
+      const res = await fetch(`/api/favorites/${boardId}/${pinId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(favorite),
+      });
+      console.log("res complete");
+      console.log(res);
+      if (res.ok) {
+        console.log("res ok");
+        const newFav = await res.json();
+        console.log("INSIDE ADD FAV THUNK", newFav);
+        dispatch(addFavorite(newFav));
+        return newFav;
+      }
+    } catch (err) {
+      return err;
+    }
+  };
+
 /** Favorites Reducer */
 const initialState = {};
 
@@ -61,6 +92,10 @@ const favoritesReducer = (state = initialState, action) => {
       const newState = {...state};
       delete newState[action.pinId];
       return newState;
+    }
+    case ADD_FAVORITE: {
+      console.log("INSIDE ADD FAV REDUCER ");
+      return {...state, [action.favorite.id]: action.favorite};
     }
     default:
       return state;
