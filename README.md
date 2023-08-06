@@ -107,7 +107,7 @@ The file explorer is accessible using the button in left corner of the navigatio
 * Users should be able to delete their comment from a pin.
 
 
-### Favorites (partial CRUD)
+### Favorites
 * Users should be able to see all Pins they favorited.
 * Users should be able to favorite Pins.
 * Users should be able to unfavorite Pins.
