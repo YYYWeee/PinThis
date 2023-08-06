@@ -9,6 +9,17 @@ def seed_favorites():
                  {"user_id": 3, "pin_id": 2, "board_id": 4},
                  {"user_id": 1, "pin_id": 15, "board_id": 8},
                  {"user_id": 1, "pin_id": 16, "board_id": 8},
+                 {"user_id": 1, "pin_id": 1, "board_id": 7},
+                 {"user_id": 1, "pin_id": 3, "board_id": 7},
+                 {"user_id": 1, "pin_id": 10, "board_id": 7},
+                 {"user_id": 1, "pin_id": 13, "board_id": 7},
+                 {"user_id": 1, "pin_id": 4, "board_id": 7},
+                 {"user_id": 1, "pin_id": 18, "board_id": 9},
+                 {"user_id": 3, "pin_id": 22, "board_id": 12},
+                 {"user_id": 3, "pin_id": 23, "board_id": 12},
+                 {"user_id": 2, "pin_id": 27, "board_id": 15},
+                 {"user_id": 4, "pin_id": 29, "board_id": 15},
+                 {"user_id": 6, "pin_id": 31, "board_id": 16},
                  ]
 
     seed_favorites = [db.session.add(Favorite(**favorite))

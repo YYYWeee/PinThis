@@ -13,9 +13,9 @@ def seed_users():
     joey = User(
         username='Joey', email='user4@aa.io', password='password', first_name='Joey', last_name='Tribbiani', about='Living life frugally with DIY, budgeting, freezer meals..', photo_url='https://upload.wikimedia.org/wikipedia/en/d/da/Matt_LeBlanc_as_Joey_Tribbiani.jpg')
     monica = User(
-        username='TheCozyCook', email='user5@aa.io', password='password', first_name='The Cozy Cook -Easy Dinner Recipes, Chicken, Pasta, Soup, + more!', last_name='', about='Hi, I\'m Monica Geller! My mission is to help busy home cooks create delicious recipes that are budget-friendly and easy to follow.', photo_url='https://www.looper.com/img/gallery/every-love-interest-of-friends-monica-geller-ranked/intro-1668012545.webp')
+        username='Monica', email='user5@aa.io', password='password', first_name='Monica', last_name='', about='Hi, I\'m Monica Geller! My mission is to help busy home cooks create delicious recipes that are budget-friendly and easy to follow.', photo_url='https://www.looper.com/img/gallery/every-love-interest-of-friends-monica-geller-ranked/intro-1668012545.webp')
     phoebe = User(
-        username='HomeTalk', email='user6@aa.io', password='password', first_name='Home Talk & Decor | Creativity | Life', last_name='', about='🌴DIY crafts YouTuber ☀️Resin art & resin crafts maker 🌴Flip-flop wearer 🐈Stops for stuff at curb for furniture makeovers ☀️Loves pinning DIY home decor ideas', photo_url='https://imgix.bustle.com/rehost/2016/9/13/c9e38185-9873-4dd9-82eb-6d873280415e.png')
+        username='Phoebe', email='user6@aa.io', password='password', first_name='Phoebe', last_name='', about='🌴DIY crafts YouTuber ☀️Resin art & resin crafts maker 🌴Flip-flop wearer 🐈Stops for stuff at curb for furniture makeovers ☀️Loves pinning DIY home decor ideas', photo_url='https://imgix.bustle.com/rehost/2016/9/13/c9e38185-9873-4dd9-82eb-6d873280415e.png')
 
     db.session.add(demo)
     db.session.add(ross)

@@ -1,9 +1,8 @@
-
 import SignupFormModal from "../SignupFormModal";
 import OpenModalButton from "../OpenModalButton";
-import { useHistory } from "react-router-dom";
-import React, { useState, useEffect, useRef } from "react";
-import Splash from "./Splash"
+import {useHistory} from "react-router-dom";
+import React, {useState, useEffect, useRef} from "react";
+import Splash from "./Splash";
 import "./LandingPage.css";
 
 function LandingPage() {
@@ -12,12 +11,11 @@ function LandingPage() {
   const handleExplore = async (e) => {
     e.preventDefault();
     history.push(`/pins`);
-    console.log('button')
+    console.log("button");
   };
 
   return (
     <>
-
       <nav class="navbar-Landing">
         <ul>
           {/* <li>1</li>
@@ -36,11 +34,15 @@ function LandingPage() {
       </div>
       {/* <div id="first-container" className="container"><h2>Save ideas you like</h2></div> */}
       <div id="second-container" className="container">
-        <h2>See it, make it, try it, do it<a href="/pins" className="explore">explore</a></h2>
+        <h2>
+          See it, make it, try it, do it
+          <a href="/pins" className="explore">
+            explore
+          </a>
+        </h2>
         <div className="button-container">
           {/* <button type="submit" className="explore" onClick={handleExplore}>Explore</button> */}
           {/* <a href="/pins" className="explore">explore</a> */}
-
         </div>
       </div>
       <div id="third-container" className="container">
@@ -50,13 +52,12 @@ function LandingPage() {
             <h2 className="signup1">Sign up to get your idea</h2>
           </div>
         </div>
-        <div className="right">
+        {/* <div className="right">
           <SignupFormModal />
-        </div>
+        </div> */}
       </div>
-
     </>
-  )
+  );
 }
 
 export default LandingPage;

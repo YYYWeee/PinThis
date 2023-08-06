@@ -1,16 +1,17 @@
-import { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams, useHistory } from "react-router-dom";
-import { fetchAllBoardsThunk } from "../../store/boards";
+import {useEffect, useState, useRef} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {useParams, useHistory} from "react-router-dom";
+import {fetchAllBoardsThunk} from "../../store/boards";
 import BoardCard from "./BoardCard";
 import "./CurrentUser.css";
 import PinsList from "../Pins/PinsList/PinsList";
+import PageNotFound from "../PageNotFound";
 
 export default function CurrentUser() {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { username } = useParams();
+  const {username} = useParams();
   const [showBoards, setShowBoards] = useState(true);
 
   const sessionUser = useSelector((state) => state.session.user);
@@ -20,6 +21,8 @@ export default function CurrentUser() {
   const boards = useSelector((state) => {
     return Object.values(state.boards.allBoards);
   });
+
+  console.log("BOARD USER", boardUser);
 
   const handleClickCreated = () => {
     if (!showBoards) return;
@@ -118,6 +121,10 @@ export default function CurrentUser() {
 
   if (!boards) return null;
 
+  if (Object.keys(boardUser).length === 0) {
+    return <PageNotFound />;
+  }
+
   return (
     <div className="curr-user-wrap">
       <div className="user-info">
@@ -139,7 +146,7 @@ export default function CurrentUser() {
         </div>
         <div className="my-username">@{boardUser?.username}</div>
         <div className="my-username1">{boardUser?.about}</div>
-        {sessionUser.id === boardUser.id && (
+        {sessionUser?.id === boardUser.id && (
           <div className="user-buttons">
             <button
               className="follow-btn cursor a97"
@@ -149,7 +156,7 @@ export default function CurrentUser() {
             </button>
           </div>
         )}
-        {sessionUser.id !== boardUser.id && (
+        {sessionUser?.id !== boardUser.id && (
           <div className="user-buttons">
             <button
               className="follow-btn2"
@@ -178,7 +185,7 @@ export default function CurrentUser() {
           </button>
         </div>
       </div>
-      {sessionUser.id === boardUser.id && showBoards && (
+      {sessionUser?.id === boardUser.id && showBoards && (
         <div className="board-func-btns-container">
           <div
             className={

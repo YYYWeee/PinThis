@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { fetchOneBoardThunk } from "../../../store/boards";
+import {useEffect, useState, useRef} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {useHistory} from "react-router-dom";
+import {useParams} from "react-router-dom";
+import {fetchOneBoardThunk} from "../../../store/boards";
 import OpenModalButton from "../../OpenModalButton";
 import EditBoard from "../EditBoard";
 import DeleteBoard from "../DeleteBoard";
@@ -10,11 +10,12 @@ import CollaboratorModal from "../CollaboratorModal";
 
 import "./SingleBoard.css";
 import BoardPinsList from "./BoardPinsList";
+import PageNotFound from "../../PageNotFound";
 
 export default function SingleBoardDetails() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { boardId } = useParams();
+  const {boardId} = useParams();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef1 = useRef();
   const sessionUser = useSelector((state) => state.session.user);
@@ -82,7 +83,10 @@ export default function SingleBoardDetails() {
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
 
-  if (!singleBoard) return null;
+  if (Object.keys(singleBoard).length === 0) {
+    return <PageNotFound />;
+  }
+
   if (!singleBoard.collaborators) return null;
 
   return (

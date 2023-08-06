@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Route, Switch } from "react-router-dom";
-import { authenticate } from "./store/session";
+import React, {useState, useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {Route, Switch} from "react-router-dom";
+import {authenticate} from "./store/session";
 
 import SignupFormPage from "./components/SignupFormPage";
 import LoginFormPage from "./components/LoginFormPage";
@@ -15,10 +15,12 @@ import SingleBoardDetails from "./components/Boards/SingleBoardDetails/SingleBoa
 import CreateBoard from "./components/Boards/CreateBoard/CreateBoard";
 import Footer from "./components/Footer";
 import Favorite from "./components/Favorite";
+import PageNotFound from "./components/PageNotFound";
 
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
     dispatch(authenticate()).then(() => setIsLoaded(true));
   }, [dispatch]);
@@ -59,8 +61,12 @@ function App() {
             <Route exact path="/:username">
               <CurrentUser />
             </Route>
+            <Route exact path="*">
+              <PageNotFound />
+            </Route>
           </Switch>
         )}
+
         <Footer />
       </div>
     </>
